@@ -22,7 +22,7 @@
             const contactForm = document.getElementById('contactForm');
             const contactList = document.getElementById('contactList');
 
-            // Función para obtener contactos
+            
             const obtenerContactos = async () => {
                 try {
                     const response = await fetch('/contactos');
@@ -38,7 +38,7 @@
                 }
             };
 
-            // Función para agregar contacto
+            
             contactForm.addEventListener('submit', async (event) => {
                 event.preventDefault();
                 const nombre = document.getElementById('nombre').value;
@@ -64,7 +64,7 @@
                 }
             });
 
-            // Obtener contactos al cargar la página
+        
             obtenerContactos();
         });
     </script>
