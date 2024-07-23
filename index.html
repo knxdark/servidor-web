@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda de Contactos</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Agenda de Contactos</h1>
+        <form id="contactForm">
+            <input type="text" id="nombre" placeholder="Nombre" required>
+            <input type="text" id="telefono" placeholder="Teléfono" required>
+            <button type="submit">Agregar Contacto</button>
+        </form>
+        <ul id="contactList"></ul>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const contactForm = document.getElementById('contactForm');
+            const contactList = document.getElementById('contactList');
+
+            // Función para obtener contactos
+            const obtenerContactos = async () => {
+                try {
+                    const response = await fetch('/contactos');
+                    const contactos = await response.json();
+                    contactList.innerHTML = '';
+                    contactos.forEach(contacto => {
+                        const li = document.createElement('li');
+                        li.textContent = `${contacto.nombre} - ${contacto.telefono}`;
+                        contactList.appendChild(li);
+                    });
+                } catch (error) {
+                    console.error('Error al obtener contactos:', error);
+                }
+            };
+
+            // Función para agregar contacto
+            contactForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const nombre = document.getElementById('nombre').value;
+                const telefono = document.getElementById('telefono').value;
+
+                try {
+                    const response = await fetch('/contactos', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ nombre, telefono })
+                    });
+
+                    if (response.ok) {
+                        obtenerContactos();
+                        contactForm.reset();
+                    } else {
+                        console.error('Error al agregar contacto:', await response.json());
+                    }
+                } catch (error) {
+                    console.error('Error al agregar contacto:', error);
+                }
+            });
+
+            // Obtener contactos al cargar la página
+            obtenerContactos();
+        });
+    </script>
+</body>
+</html>
